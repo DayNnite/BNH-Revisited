@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="Sam Getahun" />
+  <link rel="stylesheet" href="styles.css">
+  <title>Bear, Ninja, Hunter</title>
+
+</head>
+<body>
+  <main>
+    <h2>Bear, Ninja, Hunter</h2>
+    <p>Play against the computer!</p>
+    <ul>
+      <li>The Bear beats the Hunter.</li>
+      <li>The Hunter beats the Ninja.</li>
+      <li>The Ninja beats the Bear.</li>
+    </ul>
+
+    <p>Click a button below to select your choice.</p>
+
+    <div id="initial">
+      <button onclick="handleChoice('bear')">Bear</button>
+      <button onclick="handleChoice('ninja')">Ninja</button>
+      <button onclick="handleChoice('hunter')">Hunter</button>
+    </div>
+
+    <div id="results" hidden>
+      <p id="playerLine"></p>
+      <p id="computerLine"></p>
+      <p id="resultLine" style="font-weight:bold;"></p>
+      <p id="counters"></p>
+
+      <button onclick="playAgain()">Play Again</button>
+      <button onclick="endSession()">End Session</button>
+    </div>
+  </main>
+
+  <script src = "js/script.js">
+    const choices = ["bear", "ninja", "hunter"];
+    let playerWins = 0;
+    let computerWins = 0;
+
+    function showInitial() {
+      document.getElementById("initial").hidden = false;
+      document.getElementById("results").hidden = true;
+    }
+
+    function showResults() {
+      document.getElementById("initial").hidden = true;
+      document.getElementById("results").hidden = false;
+    }
+
+    function randomComputerChoice() {
+      const index = Math.floor(Math.random() * choices.length);
+      return choices[index];
+    }
+
+    function getOutcome(player, cpu) {
+      if (player === cpu) return "tie";
+      if (
+        (player === "bear" && cpu === "ninja") ||
+        (player === "ninja" && cpu === "hunter") ||
+        (player === "hunter" && cpu === "bear")
+      ) {
+        return "player";
+      }
+      return "computer";
+    }
+    function handleChoice(playerChoice) {
+      const cpuChoice = randomComputerChoice();
+      const result = getOutcome(playerChoice, cpuChoice);
+
+      if (result === "player") playerWins++;
+      else if (result === "computer") computerWins++;
+
+      document.getElementById("playerLine").textContent = "You chose " + playerChoice + ".";
+      document.getElementById("computerLine").textContent = "Computer chose " + cpuChoice + ".";
+      document.getElementById("resultLine").textContent =
+        result === "tie"
+          ? "It's a tie!"
+          : result === "player"
+          ? "You win this round!"
+          : "Computer wins this round.";
+      document.getElementById("counters").textContent =
+        "Wins — You: " + playerWins + " | Computer: " + computerWins;
+
+      showResults();
+    }
+    function playAgain() {
+      showInitial();
+    }
+    function endSession() {
+      playerWins = 0;
+      computerWins = 0;
+      showInitial();
+    }
+    window.addEventListener("DOMContentLoaded", showInitial);
+  </script>
+</body>
+</html>
